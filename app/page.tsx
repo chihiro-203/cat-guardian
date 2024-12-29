@@ -1,11 +1,9 @@
-import React from 'react'
+import Camera from "./components/Camera";
 
-type Props = {}
-
-const Home = (props: Props) => {
+export default function Home() {
   return (
-    <div>Home</div>
-  )
+    <div>
+      <Camera />
+    </div>
+  );
 }
-
-export default Home

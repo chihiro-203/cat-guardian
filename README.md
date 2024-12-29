@@ -39,3 +39,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 https://www.youtube.com/watch?v=NStucy_xte8
 
 Person (Cat) Detection and Recording
+
+npm install react-webcam
