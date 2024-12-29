@@ -15,9 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "MeowBot",
   description: "Developed by Chi Nguyen",
-  icons: {
-    icon: "/umemeu.png",
-  },
 };
 
 export default function RootLayout({
