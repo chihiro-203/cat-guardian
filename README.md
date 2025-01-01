@@ -41,3 +41,5 @@ https://www.youtube.com/watch?v=NStucy_xte8
 Person (Cat) Detection and Recording
 
 npm install react-webcam
+
+npx shadcn@latest add separator
