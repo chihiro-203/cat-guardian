@@ -1,5 +1,5 @@
-// import Webcam from 'react-webcam';
 "use client";
+
 import { Separator } from "@/components/ui/separator";
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
@@ -39,10 +39,11 @@ export default function Camera(props: Props) {
             {/* Section 2 */}
             <div className="flex flex-col gap-2">
               <Separator />
+              <Separator />
             </div>
             {/* Section 3 */}
             <div className="flex flex-col gap-2">
-              <Separator />
+              {/* <Separator /> */}
             </div>
           </div>
         </div>

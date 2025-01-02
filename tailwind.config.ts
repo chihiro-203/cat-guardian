@@ -6,6 +6,7 @@ export default {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@shadcn/ui/**/*.js",
   ],
   theme: {
   	extend: {
@@ -58,5 +59,5 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 } satisfies Config;

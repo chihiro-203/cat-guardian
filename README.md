@@ -43,3 +43,7 @@ Person (Cat) Detection and Recording
 npm install react-webcam
 
 npx shadcn@latest add separator
+npm install next-themes
+import Webcam from 'react-webcam';
+
+add function of turn sound into text
