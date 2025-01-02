@@ -1,6 +1,9 @@
 "use client";
 
+import { ModeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { FlipHorizontal } from "lucide-react";
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 
@@ -34,6 +37,8 @@ export default function Camera(props: Props) {
           <div className="border-primary/5 border-2 max-w-xs flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
             {/* Section 1 */}
             <div className="flex flex-col gap-2">
+              <ModeToggle />
+              <Button variant={'outline'} size={'icon'} onClick={() => {setMirrored((mirror) => !mirror)}}><FlipHorizontal /></Button>
               <Separator />
             </div>
             {/* Section 2 */}
