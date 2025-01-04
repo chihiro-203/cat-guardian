@@ -1,1 +1,5 @@
-export default function Recording() {}
+export default function Recording() {
+    return (
+        <div></div>
+    )
+}
