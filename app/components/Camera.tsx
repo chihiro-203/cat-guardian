@@ -3,7 +3,12 @@
 import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CameraIcon, FlipHorizontal, Video } from "lucide-react";
+import {
+  CameraIcon,
+  FlipHorizontal,
+  PersonStanding,
+  Video,
+} from "lucide-react";
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 
@@ -15,6 +20,7 @@ export default function Camera(props: Props) {
 
   const [mirrored, setMirrored] = useState<boolean>(true);
   const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [autoRecording, setAutoRecording] = useState<boolean>(false);
 
   return (
     <div>
@@ -74,10 +80,12 @@ export default function Camera(props: Props) {
               <Separator className="my-2" />
 
               <Button
-                variant={"outline"}
+                variant={autoRecording ? "destructive" : "outline"}
                 size={"icon"}
                 onClick={toggleAutoRecording}
-              ></Button>
+              >
+                {autoRecording ? "Show Animation" : <PersonStanding />}
+              </Button>
             </div>
 
             {/* Section 3 */}
@@ -101,7 +109,17 @@ export default function Camera(props: Props) {
     // - start recording
   }
 
-  function toggleAutoRecording() {}
+  function toggleAutoRecording() {
+    if (autoRecording) {
+      setAutoRecording(false);
+
+      // Show toast to users to notify the change.
+    } else {
+      setAutoRecording(true);
+
+      // Show toast to users to notify the change.
+    }
+  }
 
   // Converting to Text
   function userPromptListening() {
