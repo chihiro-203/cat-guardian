@@ -3,14 +3,19 @@
 import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 import {
   CameraIcon,
   FlipHorizontal,
   PersonStanding,
   Video,
+  Volume2,
 } from "lucide-react";
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
+import { CirclesWithBar } from "react-loader-spinner";
+import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import { Slider } from "@radix-ui/react-slider";
 
 type Props = {};
 
@@ -21,6 +26,7 @@ export default function Camera(props: Props) {
   const [mirrored, setMirrored] = useState<boolean>(true);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [autoRecording, setAutoRecording] = useState<boolean>(false);
+  const [volume, setVolume] = useState(0.8);
 
   return (
     <div>
@@ -84,12 +90,34 @@ export default function Camera(props: Props) {
                 size={"icon"}
                 onClick={toggleAutoRecording}
               >
-                {autoRecording ? "Show Animation" : <PersonStanding />}
+                {autoRecording ? (
+                  <CirclesWithBar
+                  height={45}
+                  // width={45}
+                    color="white"
+                  />
+                ) : (
+                  <PersonStanding />
+                )}
               </Button>
             </div>
 
             {/* Section 3 */}
-            <div className="flex flex-col gap-2">{/* <Separator /> */}</div>
+            <div className="flex flex-col gap-2">
+              <Separator className="my-2"/>
+              <Popover>
+                <PopoverTrigger>
+                  <Button variant={'outline'} size={'icon'}> 
+                    <Volume2 />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Slider max={1} min={0} step={0.2} defaultValue={[volume]} onValueCommit={(val) => {setVolume(val[0])
+                    beep(val[0])
+                  }}/>
+                </PopoverContent>
+              </Popover>
+              </div>
           </div>
         </div>
       </div>
@@ -112,12 +140,10 @@ export default function Camera(props: Props) {
   function toggleAutoRecording() {
     if (autoRecording) {
       setAutoRecording(false);
-
-      // Show toast to users to notify the change.
+      toast("AutoRecording Disabled!");
     } else {
       setAutoRecording(true);
-
-      // Show toast to users to notify the change.
+      toast("AutoRecording Enabled!");
     }
   }
 

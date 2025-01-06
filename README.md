@@ -44,6 +44,8 @@ npm install react-webcam
 
 npx shadcn@latest add separator
 npm install next-themes
+npm i react-loader-spinner --legacy-peer-deps
+
 import Webcam from 'react-webcam';
 
 add function of turn sound into text
