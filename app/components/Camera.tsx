@@ -8,19 +8,14 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Slider } from "@/components/ui/slider"
+} from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
 import { meow } from "@/utils/audio";
-import {
-  CameraIcon,
-  FlipHorizontal,
-  Cat,
-  Video,
-  Volume2,
-} from "lucide-react";
+import { CameraIcon, FlipHorizontal, Cat, Video, Volume2 } from "lucide-react";
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { CirclesWithBar } from "react-loader-spinner";
+import Highlights from "./Highlights";
 
 type Props = {};
 
@@ -50,7 +45,8 @@ export default function Camera(props: Props) {
             ></canvas>
           </div>
         </div>
-        {/* Tracking Details */}
+
+        {/* Tracking Tools */}
         <div className="flex flex-row flex-1">
           <div className="border-primary/5 border-2 max-w-xs flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
             {/* Section 1 - Theme Toggle & Mirror Button*/}
@@ -132,6 +128,11 @@ export default function Camera(props: Props) {
               </Popover>
             </div>
           </div>
+        </div>
+
+        {/* Tracking Details - Highlight Section */}
+        <div className="h-full flex-1 py-4 px-2 overflow-y-scroll">
+          <Highlights />
         </div>
       </div>
     </div>
