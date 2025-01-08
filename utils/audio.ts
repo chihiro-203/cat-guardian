@@ -1,4 +1,4 @@
-export function beep(volume: number) {
+export function meow(volume: number) {
     let sound = new Audio("data:audio/wav;base64,"+shortAudio);
     sound.volume = volume;
     sound.play();

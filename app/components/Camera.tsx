@@ -16,6 +16,7 @@ import Webcam from "react-webcam";
 import { CirclesWithBar } from "react-loader-spinner";
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { Slider } from "@radix-ui/react-slider";
+import { meow } from "@/utils/audio";
 
 type Props = {};
 
@@ -106,14 +107,14 @@ export default function Camera(props: Props) {
             <div className="flex flex-col gap-2">
               <Separator className="my-2"/>
               <Popover>
-                <PopoverTrigger>
+                <PopoverTrigger asChild>
                   <Button variant={'outline'} size={'icon'}> 
                     <Volume2 />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>
                   <Slider max={1} min={0} step={0.2} defaultValue={[volume]} onValueCommit={(val) => {setVolume(val[0])
-                    beep(val[0])
+                    meow(val[0])
                   }}/>
                 </PopoverContent>
               </Popover>
