@@ -41,8 +41,8 @@ export default function Highlights() {
                     <strong>Camera Feed Highlighting 🎨</strong>
                     <p>
                         Highlights persons in{" "}
-                        <span style={{ color: "#FF0F0F" }}>red</span> and other objects in{" "}
-                        <span style={{ color: "#00B612" }}>green</span>.
+                        <span className="text-[#FF0F0F] font-semibold">red</span> and other objects in{" "}
+                        <span className="text-[#00B612] font-semibold">green</span>.
                     </p>
                 </li>
 
