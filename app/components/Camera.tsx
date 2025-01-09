@@ -12,10 +12,13 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { meow } from "@/utils/audio";
 import { CameraIcon, FlipHorizontal, Cat, Video, Volume2 } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { CirclesWithBar } from "react-loader-spinner";
 import Highlights from "./Highlights";
+import * as cocosd from "@tensorflow-models/coco-ssd"
+import "@tensorflow/tfjs-backend-cpu"
+import "@tensorflow/tfjs-backend-webgl"
 
 type Props = {};
 
@@ -27,6 +30,10 @@ export default function Camera(props: Props) {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [autoRecording, setAutoRecording] = useState<boolean>(false);
   const [volume, setVolume] = useState(0.8);
+
+  useEffect(() => {
+    initModel()
+  })
 
   return (
     <div>
