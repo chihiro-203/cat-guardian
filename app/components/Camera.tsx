@@ -103,7 +103,7 @@ export default function Camera(props: Props) {
               </Button>
             </div>
 
-            {/* Section 3 */}
+            {/* Section 3 - Volume */}
             <div className="flex flex-col gap-2">
               <Separator className="my-2" />
 
@@ -128,12 +128,15 @@ export default function Camera(props: Props) {
               </Popover>
             </div>
           </div>
+
+
+
+          {/* Tracking Details - Highlight Section */}
+          <div className="h-full flex-1 py-4 px-2 overflow-y-scroll">
+            <Highlights />
+          </div>
         </div>
 
-        {/* Tracking Details - Highlight Section */}
-        <div className="h-full flex-1 py-4 px-2 overflow-y-scroll">
-          <Highlights />
-        </div>
       </div>
     </div>
   );
@@ -171,5 +174,5 @@ export default function Camera(props: Props) {
     // - start listening
   }
 
-  function toggleAutoListening() {}
+  function toggleAutoListening() { }
 }
