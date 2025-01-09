@@ -49,3 +49,22 @@ npm i react-loader-spinner --legacy-peer-deps
 import Webcam from 'react-webcam';
 
 add function of turn sound into text
+
+run npm install, uninstall react, 
+Since react-loader-spinner@6.1.6 does not yet support React 19, the simplest solution is to downgrade React to a supported version (e.g., 18.3.1).
+
+Uninstall React 19:
+
+bash
+Copy code
+npm uninstall react react-dom
+Install React 18:
+
+bash
+Copy code
+npm install react@18 react-dom@18
+Reinstall react-loader-spinner:
+
+bash
+Copy code
+npm install react-loader-spinner
