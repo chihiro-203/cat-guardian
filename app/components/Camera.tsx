@@ -14,11 +14,12 @@ import { meow } from "@/utils/audio";
 import { CameraIcon, FlipHorizontal, Cat, Video, Volume2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { CirclesWithBar } from "react-loader-spinner";
+import { CirclesWithBar, Rings } from "react-loader-spinner";
 import Highlights from "./Highlights";
-import * as cocosd from "@tensorflow-models/coco-ssd"
-import "@tensorflow/tfjs-backend-cpu"
-import "@tensorflow/tfjs-backend-webgl"
+import * as cocossd from "@tensorflow-models/coco-ssd";
+import "@tensorflow/tfjs-backend-cpu";
+import "@tensorflow/tfjs-backend-webgl";
+import { ObjectDetection } from "@tensorflow-models/coco-ssd";
 
 type Props = {};
 
@@ -30,10 +31,28 @@ export default function Camera(props: Props) {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [autoRecording, setAutoRecording] = useState<boolean>(false);
   const [volume, setVolume] = useState(0.8);
+  const [model, setModel] = useState<ObjectDetection>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    initModel()
-  })
+    setLoading(true);
+    initModel();
+  }, []);
+
+  // load model
+  // set it as a state variable
+  async function initModel() {
+    const loadedModel: ObjectDetection = await cocossd.load({
+      base: "mobilenet_v2",
+    });
+    setModel(loadedModel);
+  }
+
+  useEffect(() => {
+    if (model) {
+      setLoading(false)
+    }
+  }, [model])
 
   return (
     <div>
@@ -136,14 +155,15 @@ export default function Camera(props: Props) {
             </div>
           </div>
 
-
-
           {/* Tracking Details - Highlight Section */}
           <div className="h-full flex-1 py-4 px-2 overflow-y-scroll">
             <Highlights />
           </div>
         </div>
 
+        {loading && <div className="z-50 absolute w-full h-full flex items-center justify-center bg-white">
+          Getting things ready ... <Rings height={50} color="red" />
+          </div>}
       </div>
     </div>
   );
@@ -181,5 +201,5 @@ export default function Camera(props: Props) {
     // - start listening
   }
 
-  function toggleAutoListening() { }
+  function toggleAutoListening() {}
 }
