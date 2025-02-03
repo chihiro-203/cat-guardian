@@ -19,9 +19,12 @@ import Highlights from "./Highlights";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
-import { ObjectDetection } from "@tensorflow-models/coco-ssd";
+import { DetectedObject, ObjectDetection } from "@tensorflow-models/coco-ssd";
+import { drawOnCanvas } from "@/utils/draw";
 
 type Props = {};
+
+let interval: any = null
 
 export default function Camera(props: Props) {
   const webcamRef = useRef<Webcam>(null);
@@ -54,6 +57,22 @@ export default function Camera(props: Props) {
     }
   }, [model])
 
+  async function runPrediction() {
+    if (model && webcamRef.current && webcamRef.current.video && webcamRef.current.video.readyState === 4) {
+      const predictions: DetectedObject[] = await model.detect(webcamRef.current.video)
+      // console.log(predictions)
+      resizeCanvas(canvasRef, webcamRef);
+      drawOnCanvas(mirrored, predictions, canvasRef.current?.getContext('2d'))
+    }
+  }
+
+  useEffect(() => {
+    interval = setInterval(() => {
+      runPrediction();
+    }, 1000)
+
+    return () => clearInterval(interval)
+  } ,[webcamRef.current, model])
   return (
     <div>
       <div className="flex h-screen">
@@ -161,7 +180,7 @@ export default function Camera(props: Props) {
           </div>
         </div>
 
-        {loading && <div className="z-50 absolute w-full h-full flex items-center justify-center bg-white">
+        {loading && <div className="z-50 absolute w-full h-full flex items-center justify-center bg-primary-foreground">
           Getting things ready ... <Rings height={50} color="red" />
           </div>}
       </div>
@@ -203,3 +222,14 @@ export default function Camera(props: Props) {
 
   function toggleAutoListening() {}
 }
+function resizeCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>, webcamRef: React.RefObject<Webcam | null>) {
+  const canvas = canvasRef.current;
+  const video = webcamRef.current?.video;
+
+  if (canvas && video) {
+    const {videoWidth, videoHeight} = video;
+    canvas.width = videoWidth;
+    canvas.height = videoHeight;
+  }
+}
+
