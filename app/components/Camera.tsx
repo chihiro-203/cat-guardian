@@ -69,10 +69,10 @@ export default function Camera(props: Props) {
   useEffect(() => {
     interval = setInterval(() => {
       runPrediction();
-    }, 1000)
+    }, 100)
 
     return () => clearInterval(interval)
-  } ,[webcamRef.current, model])
+  } ,[webcamRef.current, model, mirrored])
   return (
     <div>
       <div className="flex h-screen">
