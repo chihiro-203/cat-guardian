@@ -17,10 +17,8 @@ export function drawOnCanvas(
 
       if (mirrored) {
         ctx.roundRect(ctx.canvas.width - x, y, -width, height, 8);
-        ctx.fillText(name, ctx.canvas.width - x - width + 10, y + 20);
       } else {
         ctx.roundRect(x, y, width, height, 8);
-        ctx.fillText(name, x + 10, y + 20);
       }
 
       // draw stroke or fill
@@ -30,6 +28,12 @@ export function drawOnCanvas(
       ctx.font = "12px Courier New";
       ctx.fillStyle = "black";
       ctx.globalAlpha = 1;
+
+      if (mirrored) {
+        ctx.fillText(name, ctx.canvas.width - x - width + 10, y + 20);
+      } else {
+        ctx.fillText(name, x + 10, y + 20);
+      }
     }
   });
 }

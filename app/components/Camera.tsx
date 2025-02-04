@@ -21,10 +21,12 @@ import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
 import { DetectedObject, ObjectDetection } from "@tensorflow-models/coco-ssd";
 import { drawOnCanvas } from "@/utils/draw";
+import { formatDate } from "@/utils/date";
 
 type Props = {};
 
-let interval: any = null
+let interval: any = null;
+let stopTimeout: any = null;
 
 export default function Camera(props: Props) {
   const webcamRef = useRef<Webcam>(null);
@@ -36,6 +38,37 @@ export default function Camera(props: Props) {
   const [volume, setVolume] = useState(0.8);
   const [model, setModel] = useState<ObjectDetection>();
   const [loading, setLoading] = useState(false);
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
+  // initialize the media recorder
+  useEffect(() => {
+    if (webcamRef && webcamRef.current) {
+      const stream = (webcamRef.current.video as any).captureStream();
+      if (stream) {
+        mediaRecorderRef.current = new MediaRecorder(stream);
+        mediaRecorderRef.current.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            const recordedBlob = new Blob([e.data], { type: "video" });
+            const videoURL = URL.createObjectURL(recordedBlob);
+
+            const a = document.createElement("a");
+            a.href = videoURL;
+            a.download = `${formatDate(new Date())}.webm`;
+            a.click();
+          }
+        };
+
+        mediaRecorderRef.current.onstart = (e) => {
+          setIsRecording(true)
+        }
+
+        mediaRecorderRef.current.onstop = (e) => {
+          setIsRecording(false)
+        }
+      }
+    }
+  }, [webcamRef]);
 
   useEffect(() => {
     setLoading(true);
@@ -53,26 +86,45 @@ export default function Camera(props: Props) {
 
   useEffect(() => {
     if (model) {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [model])
+  }, [model]);
 
   async function runPrediction() {
-    if (model && webcamRef.current && webcamRef.current.video && webcamRef.current.video.readyState === 4) {
-      const predictions: DetectedObject[] = await model.detect(webcamRef.current.video)
+    if (
+      model &&
+      webcamRef.current &&
+      webcamRef.current.video &&
+      webcamRef.current.video.readyState === 4
+    ) {
+      const predictions: DetectedObject[] = await model.detect(
+        webcamRef.current.video
+      );
+
       // console.log(predictions)
       resizeCanvas(canvasRef, webcamRef);
-      drawOnCanvas(mirrored, predictions, canvasRef.current?.getContext('2d'))
+      drawOnCanvas(mirrored, predictions, canvasRef.current?.getContext("2d"));
+
+      let isPerson: boolean = false;
+      if (predictions.length > 0) {
+        predictions.forEach((prediction) => {
+          isPerson = prediction.class === 'person';
+        })
+
+        if (isPerson && autoRecording) {
+          startRecording(true);
+        }
+      }
     }
   }
 
   useEffect(() => {
     interval = setInterval(() => {
       runPrediction();
-    }, 100)
+    }, 100);
 
-    return () => clearInterval(interval)
-  } ,[webcamRef.current, model, mirrored])
+    return () => clearInterval(interval);
+  }, [webcamRef.current, model, mirrored, autoRecording]);
   return (
     <div>
       <div className="flex h-screen">
@@ -180,9 +232,11 @@ export default function Camera(props: Props) {
           </div>
         </div>
 
-        {loading && <div className="z-50 absolute w-full h-full flex items-center justify-center bg-primary-foreground">
-          Getting things ready ... <Rings height={50} color="red" />
-          </div>}
+        {loading && (
+          <div className="z-50 absolute w-full h-full flex items-center justify-center bg-primary-foreground">
+            Getting things ready ... <Rings height={50} color="red" />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -193,11 +247,37 @@ export default function Camera(props: Props) {
   }
 
   function userPromptRecording() {
-    // check if recording
-    // - then stop recording
-    // - ask for downloading record
-    // if not recording
-    // - start recording
+    if (!webcamRef.current) {
+      toast('Camera is not found. Please refresh.')
+    }
+
+    if (mediaRecorderRef.current?.state == 'recording') {
+      // check if recording
+      // - then stop recording
+      // - ask for downloading record
+      mediaRecorderRef.current.requestData();
+      clearTimeout(stopTimeout)
+      mediaRecorderRef.current.stop();
+      toast('Recording saved to downloads.')
+    } else {
+      // if not recording
+      // - start recording
+      startRecording(false);
+    }
+  }
+
+  function startRecording(doBeep: boolean) {
+    if (webcamRef.current && mediaRecorderRef.current?.state !== 'recording') {
+      mediaRecorderRef.current?.start();
+      doBeep && meow(volume);
+
+      stopTimeout = setTimeout(() => {
+        if (mediaRecorderRef.current?.state === 'recording') {
+          mediaRecorderRef.current.requestData();
+          mediaRecorderRef.current.stop();
+        }
+      }, 30000)
+    }
   }
 
   function toggleAutoRecording() {
@@ -222,14 +302,16 @@ export default function Camera(props: Props) {
 
   function toggleAutoListening() {}
 }
-function resizeCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>, webcamRef: React.RefObject<Webcam | null>) {
+function resizeCanvas(
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  webcamRef: React.RefObject<Webcam | null>
+) {
   const canvas = canvasRef.current;
   const video = webcamRef.current?.video;
 
   if (canvas && video) {
-    const {videoWidth, videoHeight} = video;
+    const { videoWidth, videoHeight } = video;
     canvas.width = videoWidth;
     canvas.height = videoHeight;
   }
 }
-
