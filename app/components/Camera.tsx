@@ -22,6 +22,7 @@ import "@tensorflow/tfjs-backend-webgl";
 import { DetectedObject, ObjectDetection } from "@tensorflow-models/coco-ssd";
 import { drawOnCanvas } from "@/utils/draw";
 import { formatDate } from "@/utils/date";
+import { base64toBlob } from "@/utils/cvt";
 
 type Props = {};
 
@@ -243,6 +244,19 @@ export default function Camera(props: Props) {
 
   function userPromptScreenshot() {
     // take picture
+    if (!webcamRef.current) {
+      toast('Camera not found. Please refresh.')
+    } else {
+      const imgSrc = webcamRef.current.getScreenshot();
+      const blob = base64toBlob(imgSrc);
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${formatDate(new Date())}.png`
+      a.click();
+
+    }
     // save picture
   }
 
@@ -300,7 +314,7 @@ export default function Camera(props: Props) {
     // - start listening
   }
 
-  function toggleAutoListening() {}
+  // function toggleAutoListening() {}
 }
 function resizeCanvas(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
