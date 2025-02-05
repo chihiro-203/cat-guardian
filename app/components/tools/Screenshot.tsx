@@ -31,7 +31,7 @@ const Screenshot: React.FC<ScreenshotProps> = ({ webcamRef }) => {
 
   return (
     <div className="flex">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 justify-center">
         <Button
           variant={"outline"}
           size={"icon"}
@@ -42,6 +42,16 @@ const Screenshot: React.FC<ScreenshotProps> = ({ webcamRef }) => {
       </div>
 
       <Separator orientation="vertical" className="mx-4" />
+
+      {/* wiki */}
+      <div className="text-sm text-muted-foreground">
+        <ul className="space-y-4">
+          <li>
+            <strong>Take Pictures 📸</strong>
+            <p>Capture snapshots at any moment from the video feed.</p>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

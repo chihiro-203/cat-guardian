@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { meow } from "@/utils/audio";
 import { Video } from "lucide-react";
 import { RefObject } from "react";
@@ -9,16 +10,16 @@ interface RecordingProps {
   webcamRef: RefObject<Webcam | null>;
   mediaRecorderRef: RefObject<MediaRecorder | null>;
   isRecording: boolean;
-  volume: number;
+  startRecording: (doBeep: boolean) => void;
 }
 
 const Recording: React.FC<RecordingProps> = ({
   webcamRef,
   mediaRecorderRef,
   isRecording,
-  volume,
+  startRecording,
 }) => {
-  let stopTimeout: any = null;
+  const stopTimeout: any = null;
 
   function userPromptRecording() {
     if (!webcamRef.current) {
@@ -35,24 +36,9 @@ const Recording: React.FC<RecordingProps> = ({
     }
   }
 
-  function startRecording(doBeep: boolean) {
-    if (webcamRef.current && mediaRecorderRef.current?.state !== "recording") {
-      mediaRecorderRef.current?.start();
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      doBeep && meow(volume);
-
-      stopTimeout = setTimeout(() => {
-        if (mediaRecorderRef.current?.state === "recording") {
-          mediaRecorderRef.current.requestData();
-          mediaRecorderRef.current.stop();
-        }
-      }, 30000);
-    }
-  }
-
   return (
     <div className="flex">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 justify-center">
         <Button
           variant={isRecording ? "destructive" : "outline"}
           size={"icon"}
@@ -60,6 +46,18 @@ const Recording: React.FC<RecordingProps> = ({
         >
           <Video />
         </Button>
+      </div>
+
+      <Separator orientation="vertical" className="mx-4" />
+
+      {/* wiki */}
+      <div className="text-sm text-muted-foreground">
+        <ul className="space-y-4">
+          <li>
+            <strong>Manual Video Recording 📽️</strong>
+            <p>Manually record video clips as needed.</p>
+          </li>
+        </ul>
       </div>
     </div>
   );

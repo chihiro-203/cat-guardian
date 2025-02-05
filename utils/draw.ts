@@ -1,4 +1,5 @@
 import { DetectedObject } from "@tensorflow-models/coco-ssd";
+import Webcam from "react-webcam";
 export function drawOnCanvas(
   mirrored: boolean,
   predictions: DetectedObject[],
@@ -36,4 +37,18 @@ export function drawOnCanvas(
       }
     }
   });
+}
+
+export function resizeCanvas(
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  webcamRef: React.RefObject<Webcam | null>
+) {
+  const canvas = canvasRef.current;
+  const video = webcamRef.current?.video;
+
+  if (canvas && video) {
+    const { videoWidth, videoHeight } = video;
+    canvas.width = videoWidth;
+    canvas.height = videoHeight;
+  }
 }

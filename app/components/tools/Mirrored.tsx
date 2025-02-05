@@ -10,7 +10,7 @@ interface MirroredProps {
 const Mirrored: React.FC<MirroredProps> = ({ mirrored, setMirrored }) => {
   return (
     <div className="flex">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 justify-center">
         <Button
           variant={"outline"}
           size={"icon"}
@@ -23,6 +23,16 @@ const Mirrored: React.FC<MirroredProps> = ({ mirrored, setMirrored }) => {
       </div>
 
       <Separator orientation="vertical" className="mx-4" />
+
+      {/* wiki */}
+      <div className="text-sm text-muted-foreground">
+        <ul className="space-y-4">
+          <li>
+            <strong>Horizontal Flip ↔️</strong>
+            <p>Adjust horizontal orientation.</p>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

@@ -1,37 +1,25 @@
 "use client";
 
-import { ModeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Slider } from "@/components/ui/slider";
-import { meow } from "@/utils/audio";
-import { CameraIcon, FlipHorizontal, Cat, Video, Volume2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { CirclesWithBar, Rings } from "react-loader-spinner";
-import Highlights from "./Highlights";
+import { Rings } from "react-loader-spinner";
+import { Separator } from "@/components/ui/separator";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import "@tensorflow/tfjs-backend-cpu";
 import "@tensorflow/tfjs-backend-webgl";
 import { DetectedObject, ObjectDetection } from "@tensorflow-models/coco-ssd";
-import { drawOnCanvas } from "@/utils/draw";
+import { drawOnCanvas, resizeCanvas } from "@/utils/draw";
 import { formatDate } from "@/utils/date";
-import { base64toBlob } from "@/utils/convert";
+import { meow } from "@/utils/audio";
 import WebcamView from "./WebcamView";
 import Volume from "./tools/Volume";
 import Mirrored from "./tools/Mirrored";
 import Theme from "./tools/Theme";
 import Screenshot from "./tools/Screenshot";
 import Recording from "./tools/Recording";
+import AutoRecord from "./tools/AutoRecord";
 
 let interval: any = null;
-let stopTimeout: any = null;
 
 export default function Camera() {
   const webcamRef = useRef<Webcam>(null);
@@ -64,11 +52,11 @@ export default function Camera() {
           }
         };
 
-        mediaRecorderRef.current.onstart = (e) => {
+        mediaRecorderRef.current.onstart = () => {
           setIsRecording(true);
         };
 
-        mediaRecorderRef.current.onstop = (e) => {
+        mediaRecorderRef.current.onstop = () => {
           setIsRecording(false);
         };
       }
@@ -144,97 +132,30 @@ export default function Camera() {
 
         {/* Tracking Tools */}
         <div className="flex flex-row flex-1">
-          <div className="border-primary/5 border-2 w-full flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
-            {/* Section 1 - Theme Toggle & Mirror Button*/}
-            {/* <div className="flex flex-col gap-2"> */}
-            {/* <ModeToggle /> */}
-            {/* <Button
-                variant={"outline"}
-                size={"icon"}
-                onClick={() => {
-                  setMirrored((mirrored) => !mirrored);
-                }}
-              >
-                <FlipHorizontal />
-              </Button> */}
+          <div className="border-primary/5 w-full border-2 flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
             <Theme />
             <Mirrored mirrored={mirrored} setMirrored={setMirrored} />
-            {/* <Separator className="my-2" /> */}
-            {/* </div> */}
 
-            {/* Section 2 - Screenshot & Recording*/}
+            <Separator className="my-2" />
 
-            {/* <Button
-                variant={"outline"}
-                size={"icon"}
-                onClick={userPromptScreenshot}
-              >
-                <CameraIcon />
-              </Button> */}
             <Screenshot webcamRef={webcamRef} />
 
-            {/* <Button
-                variant={isRecording ? "destructive" : "outline"}
-                size={"icon"}
-                onClick={userPromptRecording}
-              >
-                <Video />
-              </Button> */}
             <Recording
               webcamRef={webcamRef}
               mediaRecorderRef={mediaRecorderRef}
               isRecording={isRecording}
-              volume={volume}
+              startRecording={startRecording}
+            />
+
+            <AutoRecord
+              autoRecording={autoRecording}
+              setAutoRecording={setAutoRecording}
             />
 
             <Separator className="my-2" />
 
-            <Button
-              variant={autoRecording ? "destructive" : "outline"}
-              size={"icon"}
-              onClick={toggleAutoRecording}
-            >
-              {autoRecording ? (
-                <CirclesWithBar
-                  height={45}
-                  // width={45}
-                  color="white"
-                />
-              ) : (
-                <Cat />
-              )}
-            </Button>
-            {/* Section 3 - Volume */}
-            {/* <div className="flex flex-col gap-2">
-              <Separator className="my-2" />
-
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant={"outline"} size={"icon"}>
-                    <Volume2 />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Slider
-                    max={1}
-                    min={0}
-                    step={0.2}
-                    defaultValue={[volume]}
-                    onValueCommit={(val) => {
-                      setVolume(val[0]);
-                      meow(val[0]);
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div> */}
             <Volume volume={volume} setVolume={setVolume} />
           </div>
-
-          {/* Tracking Details - Highlight Section */}
-          {/* <div className="h-full flex-1 py-4 px-2 overflow-y-scroll">
-            <Highlights />
-          </div> */}
         </div>
 
         {loading && (
@@ -246,89 +167,11 @@ export default function Camera() {
     </div>
   );
 
-  function userPromptScreenshot() {
-    // take picture
-    if (!webcamRef.current) {
-      toast("Camera not found. Please refresh.");
-    } else {
-      const imgSrc = webcamRef.current.getScreenshot();
-      const blob = base64toBlob(imgSrc);
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${formatDate(new Date())}.png`;
-      a.click();
-    }
-    // save picture
-  }
-
-  function userPromptRecording() {
-    if (!webcamRef.current) {
-      toast("Camera is not found. Please refresh.");
-    }
-
-    if (mediaRecorderRef.current?.state == "recording") {
-      // check if recording
-      // - then stop recording
-      // - ask for downloading record
-      mediaRecorderRef.current.requestData();
-      clearTimeout(stopTimeout);
-      mediaRecorderRef.current.stop();
-      toast("Recording saved to downloads.");
-    } else {
-      // if not recording
-      // - start recording
-      startRecording(false);
-    }
-  }
-
   function startRecording(doBeep: boolean) {
     if (webcamRef.current && mediaRecorderRef.current?.state !== "recording") {
       mediaRecorderRef.current?.start();
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       doBeep && meow(volume);
-
-      stopTimeout = setTimeout(() => {
-        if (mediaRecorderRef.current?.state === "recording") {
-          mediaRecorderRef.current.requestData();
-          mediaRecorderRef.current.stop();
-        }
-      }, 30000);
     }
-  }
-
-  function toggleAutoRecording() {
-    if (autoRecording) {
-      setAutoRecording(false);
-      toast("AutoRecording Disabled!");
-    } else {
-      setAutoRecording(true);
-      toast("AutoRecording Enabled!");
-    }
-  }
-
-  // Converting to Text
-  function userPromptListening() {
-    // check if listening
-    // - stop listening
-    // - copy and delete icon appear
-    // if not listening
-    // - delete what've been heard before
-    // - start listening
-  }
-
-  // function toggleAutoListening() {}
-}
-function resizeCanvas(
-  canvasRef: React.RefObject<HTMLCanvasElement | null>,
-  webcamRef: React.RefObject<Webcam | null>
-) {
-  const canvas = canvasRef.current;
-  const video = webcamRef.current?.video;
-
-  if (canvas && video) {
-    const { videoWidth, videoHeight } = video;
-    canvas.width = videoWidth;
-    canvas.height = videoHeight;
   }
 }
