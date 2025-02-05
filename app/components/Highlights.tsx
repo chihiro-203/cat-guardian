@@ -68,12 +68,6 @@ export default function Highlights() {
         </li>
 
         <Separator />
-        <li className="space-y-4">
-          <strong>Share your thoughts 💬</strong>
-          <br />
-          <br />
-          <br />
-        </li>
       </ul>
     </div>
   );

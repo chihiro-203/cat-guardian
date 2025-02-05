@@ -22,14 +22,13 @@ import "@tensorflow/tfjs-backend-webgl";
 import { DetectedObject, ObjectDetection } from "@tensorflow-models/coco-ssd";
 import { drawOnCanvas } from "@/utils/draw";
 import { formatDate } from "@/utils/date";
-import { base64toBlob } from "@/utils/cvt";
-
-type Props = {};
+import { base64toBlob } from "@/utils/convert";
+import WebcamView from "./WebcamView";
 
 let interval: any = null;
 let stopTimeout: any = null;
 
-export default function Camera(props: Props) {
+export default function Camera() {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -61,12 +60,12 @@ export default function Camera(props: Props) {
         };
 
         mediaRecorderRef.current.onstart = (e) => {
-          setIsRecording(true)
-        }
+          setIsRecording(true);
+        };
 
         mediaRecorderRef.current.onstop = (e) => {
-          setIsRecording(false)
-        }
+          setIsRecording(false);
+        };
       }
     }
   }, [webcamRef]);
@@ -76,8 +75,7 @@ export default function Camera(props: Props) {
     initModel();
   }, []);
 
-  // load model
-  // set it as a state variable
+  // MODEL
   async function initModel() {
     const loadedModel: ObjectDetection = await cocossd.load({
       base: "mobilenet_v2",
@@ -109,8 +107,8 @@ export default function Camera(props: Props) {
       let isPerson: boolean = false;
       if (predictions.length > 0) {
         predictions.forEach((prediction) => {
-          isPerson = prediction.class === 'person';
-        })
+          isPerson = prediction.class === "person";
+        });
 
         if (isPerson && autoRecording) {
           startRecording(true);
@@ -126,22 +124,13 @@ export default function Camera(props: Props) {
 
     return () => clearInterval(interval);
   }, [webcamRef.current, model, mirrored, autoRecording]);
+
   return (
     <div>
       <div className="flex h-screen">
         {/* Webcam */}
         <div className="relative">
-          <div className="relative h-screen w-full">
-            <Webcam
-              ref={webcamRef}
-              mirrored={mirrored}
-              className="h-full w-full object-contain"
-            />
-            <canvas
-              ref={canvasRef}
-              className="absolute top-0 left-0 h-full w-full object-contain"
-            ></canvas>
-          </div>
+          <WebcamView mirrored={mirrored} webcamRef={webcamRef} canvasRef={canvasRef}/>
         </div>
 
         {/* Tracking Tools */}
@@ -228,9 +217,9 @@ export default function Camera(props: Props) {
           </div>
 
           {/* Tracking Details - Highlight Section */}
-          <div className="h-full flex-1 py-4 px-2 overflow-y-scroll">
+          {/* <div className="h-full flex-1 py-4 px-2 overflow-y-scroll">
             <Highlights />
-          </div>
+          </div> */}
         </div>
 
         {loading && (
@@ -245,34 +234,33 @@ export default function Camera(props: Props) {
   function userPromptScreenshot() {
     // take picture
     if (!webcamRef.current) {
-      toast('Camera not found. Please refresh.')
+      toast("Camera not found. Please refresh.");
     } else {
       const imgSrc = webcamRef.current.getScreenshot();
       const blob = base64toBlob(imgSrc);
 
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = `${formatDate(new Date())}.png`
+      a.download = `${formatDate(new Date())}.png`;
       a.click();
-
     }
     // save picture
   }
 
   function userPromptRecording() {
     if (!webcamRef.current) {
-      toast('Camera is not found. Please refresh.')
+      toast("Camera is not found. Please refresh.");
     }
 
-    if (mediaRecorderRef.current?.state == 'recording') {
+    if (mediaRecorderRef.current?.state == "recording") {
       // check if recording
       // - then stop recording
       // - ask for downloading record
       mediaRecorderRef.current.requestData();
-      clearTimeout(stopTimeout)
+      clearTimeout(stopTimeout);
       mediaRecorderRef.current.stop();
-      toast('Recording saved to downloads.')
+      toast("Recording saved to downloads.");
     } else {
       // if not recording
       // - start recording
@@ -281,16 +269,16 @@ export default function Camera(props: Props) {
   }
 
   function startRecording(doBeep: boolean) {
-    if (webcamRef.current && mediaRecorderRef.current?.state !== 'recording') {
+    if (webcamRef.current && mediaRecorderRef.current?.state !== "recording") {
       mediaRecorderRef.current?.start();
       doBeep && meow(volume);
 
       stopTimeout = setTimeout(() => {
-        if (mediaRecorderRef.current?.state === 'recording') {
+        if (mediaRecorderRef.current?.state === "recording") {
           mediaRecorderRef.current.requestData();
           mediaRecorderRef.current.stop();
         }
-      }, 30000)
+      }, 30000);
     }
   }
 
