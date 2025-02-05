@@ -24,6 +24,11 @@ import { drawOnCanvas } from "@/utils/draw";
 import { formatDate } from "@/utils/date";
 import { base64toBlob } from "@/utils/convert";
 import WebcamView from "./WebcamView";
+import Volume from "./tools/Volume";
+import Mirrored from "./tools/Mirrored";
+import Theme from "./tools/Theme";
+import Screenshot from "./tools/Screenshot";
+import Recording from "./tools/Recording";
 
 let interval: any = null;
 let stopTimeout: any = null;
@@ -130,68 +135,77 @@ export default function Camera() {
       <div className="flex h-screen">
         {/* Webcam */}
         <div className="relative">
-          <WebcamView mirrored={mirrored} webcamRef={webcamRef} canvasRef={canvasRef}/>
+          <WebcamView
+            mirrored={mirrored}
+            webcamRef={webcamRef}
+            canvasRef={canvasRef}
+          />
         </div>
 
         {/* Tracking Tools */}
         <div className="flex flex-row flex-1">
-          <div className="border-primary/5 border-2 max-w-xs flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
+          <div className="border-primary/5 border-2 w-full flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
             {/* Section 1 - Theme Toggle & Mirror Button*/}
-            <div className="flex flex-col gap-2">
-              <ModeToggle />
-              <Button
+            {/* <div className="flex flex-col gap-2"> */}
+            {/* <ModeToggle /> */}
+            {/* <Button
                 variant={"outline"}
                 size={"icon"}
                 onClick={() => {
-                  setMirrored((mirror) => !mirror);
+                  setMirrored((mirrored) => !mirrored);
                 }}
               >
                 <FlipHorizontal />
-              </Button>
-              <Separator className="my-2" />
-            </div>
+              </Button> */}
+            <Theme />
+            <Mirrored mirrored={mirrored} setMirrored={setMirrored} />
+            {/* <Separator className="my-2" /> */}
+            {/* </div> */}
 
             {/* Section 2 - Screenshot & Recording*/}
-            <div className="flex flex-col gap-2">
-              <Separator className="my-2" />
 
-              <Button
+            {/* <Button
                 variant={"outline"}
                 size={"icon"}
                 onClick={userPromptScreenshot}
               >
                 <CameraIcon />
-              </Button>
+              </Button> */}
+            <Screenshot webcamRef={webcamRef} />
 
-              <Button
+            {/* <Button
                 variant={isRecording ? "destructive" : "outline"}
                 size={"icon"}
                 onClick={userPromptRecording}
               >
                 <Video />
-              </Button>
+              </Button> */}
+            <Recording
+              webcamRef={webcamRef}
+              mediaRecorderRef={mediaRecorderRef}
+              isRecording={isRecording}
+              volume={volume}
+            />
 
-              <Separator className="my-2" />
+            <Separator className="my-2" />
 
-              <Button
-                variant={autoRecording ? "destructive" : "outline"}
-                size={"icon"}
-                onClick={toggleAutoRecording}
-              >
-                {autoRecording ? (
-                  <CirclesWithBar
-                    height={45}
-                    // width={45}
-                    color="white"
-                  />
-                ) : (
-                  <Cat />
-                )}
-              </Button>
-            </div>
-
+            <Button
+              variant={autoRecording ? "destructive" : "outline"}
+              size={"icon"}
+              onClick={toggleAutoRecording}
+            >
+              {autoRecording ? (
+                <CirclesWithBar
+                  height={45}
+                  // width={45}
+                  color="white"
+                />
+              ) : (
+                <Cat />
+              )}
+            </Button>
             {/* Section 3 - Volume */}
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <Separator className="my-2" />
 
               <Popover>
@@ -213,7 +227,8 @@ export default function Camera() {
                   />
                 </PopoverContent>
               </Popover>
-            </div>
+            </div> */}
+            <Volume volume={volume} setVolume={setVolume} />
           </div>
 
           {/* Tracking Details - Highlight Section */}
