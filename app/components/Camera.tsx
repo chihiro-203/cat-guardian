@@ -133,11 +133,9 @@ export default function Camera() {
 
         {/* Tracking Tools */}
         <div className="flex flex-row flex-1">
-          <div className="border-primary/5 w-full border-2 flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
-            
-
-          <Note />
-          <Separator className="my-2" />
+          <div className="border-primary/5 w-full h-screen border-2 flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
+            <Note />
+            <Separator className="my-2" />
 
             <Theme />
             <Mirrored mirrored={mirrored} setMirrored={setMirrored} />

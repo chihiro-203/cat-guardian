@@ -36,35 +36,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 
-https://www.youtube.com/watch?v=NStucy_xte8
-
 Person (Cat) Detection and Recording
 
-npm install react-webcam
-
-npx shadcn@latest add separator
-npm install next-themes
-npm i react-loader-spinner --legacy-peer-deps
-
-import Webcam from 'react-webcam';
-
-add function of turn sound into text
-
-run npm install, uninstall react, 
-Since react-loader-spinner@6.1.6 does not yet support React 19, the simplest solution is to downgrade React to a supported version (e.g., 18.3.1).
-
-Uninstall React 19:
-
-bash
-Copy code
-npm uninstall react react-dom
-Install React 18:
-
-bash
-Copy code
-npm install react@18 react-dom@18
-Reinstall react-loader-spinner:
-
-bash
-Copy code
-npm install react-loader-spinner
+Update ask for permission later 
