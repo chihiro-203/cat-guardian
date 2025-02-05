@@ -18,6 +18,7 @@ import Theme from "./tools/Theme";
 import Screenshot from "./tools/Screenshot";
 import Recording from "./tools/Recording";
 import AutoRecord from "./tools/AutoRecord";
+import Note from "./tools/Note";
 
 let interval: any = null;
 
@@ -133,6 +134,11 @@ export default function Camera() {
         {/* Tracking Tools */}
         <div className="flex flex-row flex-1">
           <div className="border-primary/5 w-full border-2 flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
+            
+
+          <Note />
+          <Separator className="my-2" />
+
             <Theme />
             <Mirrored mirrored={mirrored} setMirrored={setMirrored} />
 
@@ -155,6 +161,10 @@ export default function Camera() {
             <Separator className="my-2" />
 
             <Volume volume={volume} setVolume={setVolume} />
+
+            {/* <Separator className="my-2" /> */}
+
+            {/* <Note /> */}
           </div>
         </div>
 
