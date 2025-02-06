@@ -18,6 +18,7 @@ const Recording: React.FC<RecordingProps> = ({
   isRecording,
   startRecording,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const stopTimeout: any = null;
 
   function userPromptRecording() {
