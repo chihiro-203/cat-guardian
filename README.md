@@ -2,12 +2,12 @@
   <img src="https://img.shields.io/badge/-🐾 chihiro_203 🐾-183369?style=flat&logo=per" alt="Badge">
 </div>
 
-<div align="center">    
-    <h1>CAT GUARDIAN</h1>    
-    <strong>Cat Guardian Tool</strong> ...
-</div> 
+<div align="center">
+    <h1>CAT GUARDIAN</h1>
+    <strong>Cat Guardian Tool</strong>  is a real-time monitoring application designed to detect people and other objects, capture screenshots, and record video streams using webcam input.
+</div>
 
-## 📋 Table of Content 
+## 📋 Table of Content
 
 1. [Introduction](#introduction)
 2. [Getting started](#getting-started)
@@ -17,7 +17,7 @@
 6. [MIT License](#mit-license)
 
 <!-- Introduction -->
-## 🪧 Introduction <a name="introduction"></a> 
+## 🪧 Introduction <a name="introduction"></a>
 ### 🔗 Link: [cat-guardian](https://chi-cat-guardian.vercel.app)
 
 ### 🛠️ Features:
@@ -49,8 +49,7 @@
 2. **Open in browser:**
 Navigate to ```http://localhost:3000``` to access the application.
 
-<!-- Technologies Used -->
-## ⚙️ Technologies Used <a name="technologies-used"></a> 
+## ⚙️ Technologies Used <a name="technologies-used"></a>
 1. __Text Editors/IDEs__: Visual Studio Code (VSCode)
 2. __Browser for Testing__: Google Chrome
 3. __Frontend__: Next.js, React, Tailwind CSS
@@ -60,7 +59,7 @@ Navigate to ```http://localhost:3000``` to access the application.
 7. __Collaboration and Communication__: Github
 
 ## 🎇 UI Interface <a name="ui-interface"></a>
-### 📽️ Tracking & Recording Panel:
+### 📽️ Tracking & Recording UI:
 <div align ="center">
     <img src="./readme/cat-guardian.png" alt="UI">
 </div>
