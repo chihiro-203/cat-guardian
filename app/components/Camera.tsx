@@ -11,7 +11,7 @@ import { DetectedObject, ObjectDetection } from "@tensorflow-models/coco-ssd";
 import { drawOnCanvas, resizeCanvas } from "@/utils/draw";
 import { formatDate } from "@/utils/date";
 import { meow } from "@/utils/audio";
-import WebcamView from "./WebcamView";
+import WebcamView from "./tools/WebcamView";
 import Volume from "./tools/Volume";
 import Mirrored from "./tools/Mirrored";
 import Theme from "./tools/Theme";
@@ -19,6 +19,7 @@ import Screenshot from "./tools/Screenshot";
 import Recording from "./tools/Recording";
 import AutoRecord from "./tools/AutoRecord";
 import Note from "./tools/Note";
+import Permit from "./tools/Permit";
 
 let interval: any = null;
 
@@ -123,7 +124,7 @@ export default function Camera() {
     <div>
       <div className="flex h-screen">
         {/* Webcam */}
-        <div className="relative">
+        <div className="relative overflow-y-hidden">
           <WebcamView
             mirrored={mirrored}
             webcamRef={webcamRef}
@@ -132,8 +133,9 @@ export default function Camera() {
         </div>
 
         {/* Tracking Tools */}
-        <div className="flex flex-row flex-1">
+        <div className="flex flex-row flex-1 overflow-y-auto">
           <div className="border-primary/5 w-full h-screen border-2 flex flex-col gap-2 justify-between shadow-md rounded-md p-4">
+            <Permit />
             <Note />
             <Separator className="my-2" />
 
@@ -159,10 +161,6 @@ export default function Camera() {
             <Separator className="my-2" />
 
             <Volume volume={volume} setVolume={setVolume} />
-
-            {/* <Separator className="my-2" /> */}
-
-            {/* <Note /> */}
           </div>
         </div>
 

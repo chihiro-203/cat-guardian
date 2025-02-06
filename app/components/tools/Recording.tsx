@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { meow } from "@/utils/audio";
 import { Video } from "lucide-react";
 import { RefObject } from "react";
 import Webcam from "react-webcam";
